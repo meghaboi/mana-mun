@@ -13,7 +13,8 @@ document.querySelectorAll('.committee-card').forEach(card=>{const name=card.quer
 
 const container=document.getElementById('globe-canvas');
 if(container){
-  const scene=new THREE.Scene(); const camera=new THREE.PerspectiveCamera(35,container.clientWidth/container.clientHeight,.1,100); camera.position.set(0,0,5.8);
+  const scene=new THREE.Scene(); const camera=new THREE.PerspectiveCamera(35,container.clientWidth/container.clientHeight,.1,100);
+  const updateCameraZ = () => { camera.position.set(0,0,window.innerWidth<=850?7.0:7.6); }; updateCameraZ();
   const renderer=new THREE.WebGLRenderer({alpha:true,antialias:true}); renderer.setPixelRatio(Math.min(devicePixelRatio,1.5)); renderer.setSize(container.clientWidth,container.clientHeight); renderer.toneMapping=THREE.ACESFilmicToneMapping; container.appendChild(renderer.domElement);
   const group=new THREE.Group(); scene.add(group);
   const globe=new THREE.Mesh(new THREE.SphereGeometry(1.65,40,40),new THREE.MeshPhysicalMaterial({color:0x64151a,roughness:.78,metalness:.18,clearcoat:.2,transparent:true,opacity:.9})); group.add(globe);
@@ -24,7 +25,7 @@ if(container){
   const light=new THREE.DirectionalLight(0xffdcc1,2.5);light.position.set(-2,2,4);scene.add(light);scene.add(new THREE.AmbientLight(0x5f1c1f,1.4));
   let mx=0,my=0; window.addEventListener('pointermove',e=>{mx=(e.clientX/innerWidth-.5)*.5;my=(e.clientY/innerHeight-.5)*.35});
   function animate(t){requestAnimationFrame(animate); if(!reduced){group.rotation.y=t*.00008+mx;group.rotation.x += (my-group.rotation.x)*.01;ringA.rotation.z=t*.00012;stars.rotation.y=-t*.00004} renderer.render(scene,camera)} animate(0);
-  window.addEventListener('resize',()=>{camera.aspect=container.clientWidth/container.clientHeight;camera.updateProjectionMatrix();renderer.setSize(container.clientWidth,container.clientHeight)});
+  window.addEventListener('resize',()=>{camera.aspect=container.clientWidth/container.clientHeight;updateCameraZ();camera.updateProjectionMatrix();renderer.setSize(container.clientWidth,container.clientHeight)});
 }
 
 const menu=document.querySelector('.menu-toggle'); const nav=document.querySelector('.nav-links'); menu?.addEventListener('click',()=>{nav.classList.toggle('open');});
